@@ -19,6 +19,7 @@ class ShowRecipeScreen extends StatelessWidget {
                 actions: [
                   InkWell(
                       onTap: () {
+                        provider.allergensNameController.text = recipeModel.restrictions;
                         provider.nameController.text = recipeModel.name;
                         provider.preperationTimeController.text =
                             recipeModel.preperationTime.toString();
@@ -27,6 +28,7 @@ class ShowRecipeScreen extends StatelessWidget {
                         provider.instructionsController.text =
                             recipeModel.instructions;
                         provider.image = recipeModel.image;
+                        provider.allergensNameController.text;
                         Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -161,6 +163,59 @@ class ShowRecipeScreen extends StatelessWidget {
                       ],
                     ),
                   ),
+                   Container(
+                    height: 100,
+                    width: 200,
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                        color: !Provider.of<RecipeClass>(context).isDark
+                            ? Colors.blue[100]
+                            : null,
+                        borderRadius: BorderRadius.circular(10)),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'allergens',
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
+                        ),
+                        
+                        
+                        Text(
+                          recipeModel.allergensName,
+                          style: const TextStyle(fontSize: 26),
+                        )
+                      ],
+                    ),
+                  ),
+                  Container(
+                    height: 100,
+                    width: 200,
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                        color: !Provider.of<RecipeClass>(context).isDark
+                            ? Colors.blue[100]
+                            : null,
+                        borderRadius: BorderRadius.circular(10)),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Restrictions',
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
+                        ),
+                        
+                        
+                        Text(
+                          recipeModel.restrictions,
+                          style: const TextStyle(fontSize: 26),
+                        )
+                      ],
+                    ),
+                  ),
+                  
                 ]),
               ),
             )));

@@ -1,6 +1,8 @@
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import '../data_repository/dbHelper.dart';
 import '../models/recipe_model.dart';
 
@@ -19,6 +21,8 @@ class RecipeClass extends ChangeNotifier {
   TextEditingController preperationTimeController = TextEditingController();
   TextEditingController instructionsController = TextEditingController();
   TextEditingController ingredientsController = TextEditingController();
+  TextEditingController allergensNameController = TextEditingController();
+  TextEditingController restrictionsController = TextEditingController();
   File? image;
 
   List<RecipeModel> allRecipes = [];
@@ -36,6 +40,8 @@ class RecipeClass extends ChangeNotifier {
         image: image,
         ingredients: ingredientsController.text,
         instructions: instructionsController.text,
+        allergensName: allergensNameController.text,
+        restrictions: restrictionsController.text,
         preperationTime: int.parse(preperationTimeController.text != ''
             ? preperationTimeController.text
             : '0'));

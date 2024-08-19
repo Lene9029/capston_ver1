@@ -9,6 +9,10 @@ class RecipeModel {
   late String ingredients;
   late String instructions;
 
+  
+  late String allergensName;
+  late String restrictions;
+
   RecipeModel({
     this.id,
     required this.name,
@@ -17,6 +21,10 @@ class RecipeModel {
     required this.preperationTime,
     required this.ingredients,
     required this.instructions,
+
+    
+   required this.allergensName,
+   required this.restrictions
   });
 
   Map<String, dynamic> toMap() {
@@ -27,7 +35,9 @@ class RecipeModel {
       'preperationTime': preperationTime,
       'ingredients': ingredients,
       'instructions': instructions,
-      'image': image == null ? '' : image!.path
+      'image': image == null ? '' : image!.path,
+      'allergenName': allergensName,
+      'restrictions': restrictions
     };
   }
 
@@ -39,6 +49,9 @@ class RecipeModel {
         preperationTime: map['preperationTime'],
         ingredients: map['ingredients'],
         instructions: map['instructions'],
+        allergensName: map['allergenName'],
+        restrictions: map['restrictions'],
         image: map['image'] != null ? File(map['image']) : null);
+        
   }
 }

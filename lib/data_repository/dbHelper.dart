@@ -1,5 +1,6 @@
 import 'dart:io';
 
+
 import 'package:path_provider/path_provider.dart';
 import 'package:recipe_page_new/models/recipe_model.dart';
 import 'package:sqflite/sqflite.dart';
@@ -16,10 +17,19 @@ class DbHelper {
   final String preperationTimeColumn = 'preperationTime';
   final String imageColumn = 'image';
 
+  final String allergensName = 'allergenName';
+  final String restrictions = 'restrictions';
+
   Future<void> initDatabase() async {
     database = await connectToDatabase();
+    
   }
+  
+ 
+ 
 
+    
+      
   Future<Database> connectToDatabase() async {
     Directory directory = await getApplicationDocumentsDirectory();
     String path = '${directory.path}/recipes.db';
@@ -28,46 +38,33 @@ class DbHelper {
       version: 1,
       onCreate: (db, version) {
         db.execute(
-            'CREATE TABLE $tableName ($idColumn INTEGER PRIMARY KEY AUTOINCREMENT, $nameColumn TEXT, $preperationTimeColumn INTEGER, $isFavoriteColumn INTEGER, $ingredientsColumn TEXT, $instructionsColumn TEXT, $imageColumn TEXT)');
+            'CREATE TABLE $tableName ($idColumn INTEGER PRIMARY KEY AUTOINCREMENT, $nameColumn TEXT, $preperationTimeColumn INTEGER, $isFavoriteColumn INTEGER, $ingredientsColumn TEXT, $instructionsColumn TEXT, $imageColumn TEXT, $allergensName TEXT, $restrictions TEXT)');
+            
       },
       onUpgrade: (db, oldVersion, newVersion) {
         db.execute(
-            'CREATE TABLE $tableName ($idColumn INTEGER PRIMARY KEY AUTOINCREMENT, $nameColumn TEXT, $preperationTimeColumn INTEGER, $isFavoriteColumn INTEGER, $ingredientsColumn TEXT, $instructionsColumn TEXT, $imageColumn TEXT)');
+            'CREATE TABLE $tableName ($idColumn INTEGER PRIMARY KEY AUTOINCREMENT, $nameColumn TEXT, $preperationTimeColumn INTEGER, $isFavoriteColumn INTEGER, $ingredientsColumn TEXT, $instructionsColumn TEXT, $imageColumn TEXT,  $allergensName TEXT, $restrictions TEXT)');
+        
       },
       onDowngrade: (db, oldVersion, newVersion) {
         db.delete(tableName);
+        
       },
+
     );
   }
   
+   
+
   Future<List<RecipeModel>> getAllRecipes() async {
     List<Map<String, dynamic>> tasks = await database.query(tableName);
     return tasks.map((e) => RecipeModel.fromMap(e)).toList();
   }
 
-  Future<List<RecipeModel>> getItem(List<String> ingredients) async {
-database;
   
-  // Constructing the WHERE clause dynamically
-  final List<String> whereClauses = [];
-  final List<dynamic> whereArgs = [];
-  
-  for (int i = 0; i < ingredients.length; i++) {
-    whereClauses.add('ingredients LIKE ?');
-    whereArgs.add('%${ingredients[i]}%');
-  }
-  
-  final List<Map<String, dynamic>> recipes = await database.query(
-    'recipe',
-    where: whereClauses.join(' OR '), // Combining the WHERE clauses with OR
-    whereArgs: whereArgs,
-  );
-  
-  return recipes.map((e) => RecipeModel.fromMap(e)).toList();
-}
 
-  Future<void> insertNewRecipe(RecipeModel recipeModel) async {
-    await database.insert(tableName, recipeModel.toMap());
+ Future<void> insertNewRecipe(RecipeModel recipeModel) async {
+    await database.insert(tableName, recipeModel.toMap());  
   }
 
   Future<void> deleteRecipe(RecipeModel recipeModel) async {
@@ -87,7 +84,9 @@ database;
           preperationTimeColumn: recipeModel.preperationTime,
           imageColumn: recipeModel.image?.path,
           ingredientsColumn: recipeModel.ingredients,
-          instructionsColumn: recipeModel.instructions
+          instructionsColumn: recipeModel.instructions,
+          allergensName: recipeModel.allergensName,
+          restrictions: recipeModel.restrictions
         },
         where: '$idColumn=?',
         whereArgs: [recipeModel.id]);

@@ -159,11 +159,45 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
                       ),
                     ),
                   ),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.vertical,
+                    child: SizedBox(
+                      height: 100,
+                      child: TextField(
+                        expands: true,
+                        maxLines: null,
+                        controller: provider.allergensNameController,
+                        decoration: InputDecoration(
+                            label: const Text('Allergens'),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(15))),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 10,),
+                  
+                  SingleChildScrollView(
+                    scrollDirection: Axis.vertical,
+                    child: SizedBox(
+                      height: 100,
+                      child: TextField(
+                        expands: true,
+                        maxLines: null,
+                        controller: provider.restrictionsController,
+                        decoration: InputDecoration(
+                            label: const Text('Restrictions'),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(15))),
+                      ),
+                    ),
+                  ),
                   const SizedBox(
                     height: 20,
                   ),
                   ElevatedButton(
                     onPressed: () {
+                      widget.recipeModel.allergensName = provider.allergensNameController.text;
+                      widget.recipeModel.restrictions = provider.restrictionsController.text;
                       widget.recipeModel.name = provider.nameController.text;
                       widget.recipeModel.preperationTime = int.parse(
                           provider.preperationTimeController.text != ''
@@ -175,6 +209,8 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
                       widget.recipeModel.instructions =
                           provider.instructionsController.text;
                       provider.updateRecipe(widget.recipeModel);
+                      provider.allergensNameController.clear();
+                      provider.restrictionsController.clear();
                       provider.nameController.clear();
                       provider.preperationTimeController.clear();
                       provider.instructionsController.clear();

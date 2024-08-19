@@ -28,22 +28,27 @@ class _SearchRecipeScreenState extends State<ShowRecipeWithIngredients> {
     });
   }
 
-  void _filterRecipes(String concatenatedIngredients) {
+  void _filterRecipes(List<String> resultData) {
     setState(() {
-      widget.filteredRecipes = widget.recipes.where((recipe) {
-        return recipe.ingredients.toLowerCase().contains(concatenatedIngredients.toLowerCase());
-      }).toList();
+      for (int i=0; i<resultData.length; i++ ){
+        String ingredient = resultData[i];
+        List filteredRecipes = widget.recipes
+          .where((recipe) =>
+              recipe.ingredients.toLowerCase().contains(ingredient))
+          .toList();
+          print(ingredient);
+          
+          var newList = filteredRecipes.add;
+      }
+      
+      print(resultData);
     });
   }
 
   @override
   void initState() {
+    _filterRecipes(widget.resultData);
     super.initState();
-    // Remove duplicate words
-    Set<String> uniqueIngredients = widget.resultData.toSet();
-    // Concatenate unique words
-    String concatenatedIngredients = uniqueIngredients.join(' ');
-    _filterRecipes(concatenatedIngredients);
   }
 
   @override
