@@ -60,22 +60,45 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     'Mushrooms'
   ];
 
-  late List<bool> _selectedChoices;
+  final List<String> restrictionsChoices = [
+    'Vegetarian',
+    'Vegan',
+    'Gluten-free',
+    'Lactose-free',
+    'Keto',
+    'Sugar-free'
+  ];
+
+  late List<bool> _selectedAllergenChoices;
+  late List<bool> _selectedRestrictionsChoices;
 
   @override
   void initState() {
     super.initState();
-    _selectedChoices = List<bool>.filled(_allergenchoices.length, false);
+    _selectedAllergenChoices = List<bool>.filled(_allergenchoices.length, false);
+    _selectedRestrictionsChoices = List<bool>.filled(restrictionsChoices.length, false);
   }
 
   String getSelectedAllergens() {
-    List<String> selectedChoices = [];
+    List<String> selectedAllergenChoices = [];
+
     for (int i = 0; i < _allergenchoices.length; i++) {
-      if (_selectedChoices[i]) {
-        selectedChoices.add(_allergenchoices[i]);
+      if (_selectedAllergenChoices[i]) {
+        selectedAllergenChoices.add(_allergenchoices[i]);
       }
     }
-    return selectedChoices.join(', ');
+    return selectedAllergenChoices.join(', ');
+  }
+
+  String getSelectedRestrictions(){
+    List<String> selectedRestrictionsChoices = [];
+
+    for (int i = 0; i < restrictionsChoices.length; i++){
+      if (_selectedRestrictionsChoices[i]){
+        selectedRestrictionsChoices.add(restrictionsChoices[i]);
+      }
+    }
+    return selectedRestrictionsChoices.join(',');
   }
 
   void _nextPage() {
@@ -87,7 +110,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       );
     } else {
       // Show final selected choices or perform final action
-      String selectedChoicesString = getSelectedAllergens();
+      String selectedChoicesString = getSelectedRestrictions();
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -170,7 +193,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
+            const Text(
               'Select Options:',
               style: TextStyle(fontSize: 20),
             ),
@@ -182,10 +205,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 (int index) {
                   return ChoiceChip(
                     label: Text(_allergenchoices[index]),
-                    selected: _selectedChoices[index],
+                    selected: _selectedAllergenChoices[index],
                     onSelected: (bool selected) {
                       setState(() {
-                        _selectedChoices[index] = selected;
+                        _selectedAllergenChoices[index] = selected;
                       });
                     },
                   );
@@ -198,7 +221,38 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     );
   }
 
-  Widget _buildPage3() {
+  Widget _buildPage3(){
+    return Scaffold(
+      body: Padding(padding: const EdgeInsets.all(15),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          const Text('Dietary Restrictions:'),
+          SizedBox(height: 20,),
+          Wrap(
+            spacing: 8.0,
+            children: List<Widget>.generate(
+              restrictionsChoices.length, 
+              (int index) {
+                return ChoiceChip(label: Text(restrictionsChoices[index]),
+                 selected: _selectedRestrictionsChoices[index],
+                 onSelected: (bool selected){
+                  setState(() {
+                    _selectedRestrictionsChoices[index] = selected;
+                  });
+                 },
+                );
+              }),
+          )
+        ]
+        
+      ),),
+      
+    );
+  }
+}
+
+  Widget _buildPage4() {
     return Center(
       child: Text(
         'Thank you for using our app!',
@@ -206,8 +260,3 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       ),
     );
   }
-
-  Widget _buildPage4(){
-    return Scaffold();
-  }
-}
