@@ -1,48 +1,51 @@
 import 'package:flutter/material.dart';
-import 'package:recipe_page_new/data_repository/dbHelper.dart';
+import 'package:provider/provider.dart';
 import 'package:recipe_page_new/models/recipe_model.dart';
+import 'package:recipe_page_new/providers/alleres_provider.dart';
 import 'package:recipe_page_new/ui/widgets/recipe_widget.dart';
 
 // ignore: must_be_immutable
 class ShowRecipeWithIngredients extends StatefulWidget {
+   
+  ShowRecipeWithIngredients({super.key, required this.recipes, required this.resultData,});
   final List<RecipeModel> recipes;
   List<RecipeModel> filteredRecipes = [];
   final List<String> resultData;
+  List<RecipeModel> filteredRecipe = [];
 
-  ShowRecipeWithIngredients({super.key, required this.recipes, required this.resultData}) {
-    filteredRecipes = recipes;
-  }
-
-  @override
   State<ShowRecipeWithIngredients> createState() => _SearchRecipeScreenState();
 }
 
 class _SearchRecipeScreenState extends State<ShowRecipeWithIngredients> {
-
+  late List<RecipeModel> _filteredRecipes;
+  List<RecipeModel> _filteredRecipe = [];
+  
   void filterRecipe(String value) {
     setState(() {
-      widget.filteredRecipes = widget.recipes
+      _filteredRecipes = widget.recipes
           .where((recipe) =>
               recipe.name.toLowerCase().contains(value.toLowerCase()))
           .toList();
     });
   }
-
-  void _filterRecipes(List<String> resultData) {
+ _filterRecipes(List<String> resultData) {
     setState(() {
-      for (int i=0; i<resultData.length; i++ ){
-        String ingredient = resultData[i];
-        List filteredRecipes = widget.recipes
+      for (var ingredient in resultData){
+        
+
+       _filteredRecipes = widget.recipes
           .where((recipe) =>
               recipe.ingredients.toLowerCase().contains(ingredient))
           .toList();
           print(ingredient);
-          
-          var newList = filteredRecipes.add;
+        
+       
+         _filteredRecipe.addAll(_filteredRecipes);
+        
       }
-      
-      print(resultData);
     });
+      
+    
   }
 
   @override
@@ -52,7 +55,7 @@ class _SearchRecipeScreenState extends State<ShowRecipeWithIngredients> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) { 
     return Scaffold(
       appBar: AppBar(
         title: TextField(
@@ -79,11 +82,11 @@ class _SearchRecipeScreenState extends State<ShowRecipeWithIngredients> {
       ),
       body: Container(
         padding: const EdgeInsets.all(10),
-        child: widget.filteredRecipes.isNotEmpty
+        child: _filteredRecipe.isNotEmpty
             ? ListView.builder(
-                itemCount: widget.filteredRecipes.length,
+                itemCount: _filteredRecipe.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return RecipeWidget(widget.filteredRecipes[index]);
+                  return RecipeWidget(_filteredRecipe[index]);
                 },
               )
             : const Center(

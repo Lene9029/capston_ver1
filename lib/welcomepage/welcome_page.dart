@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 import 'package:recipe_page_new/Detect_Object_Page.dart';
 import 'package:recipe_page_new/HomeScreen.dart';
+import 'package:recipe_page_new/providers/alleres_provider.dart';
 import 'package:recipe_page_new/ui/screens/favorite_recipes_screen.dart';
 import 'package:recipe_page_new/ui/screens/main_recipe_screen.dart';
 import 'package:recipe_page_new/ui/screens/new_recipe_screen.dart';
@@ -11,7 +14,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class welcomepage extends StatelessWidget {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) {       
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: OnboardingScreen(),
@@ -21,7 +24,7 @@ class welcomepage extends StatelessWidget {
         '/new_recipe_screen': (context) => const NewRecipeScreen(),
         '/main_recipe_screen': (context) => const MainRecipeScreen(),
         '/shopping_list_screen': (context) => const ShoppingListScreen(),
-          
+        '/homescreen'  :(context) => const HomeScreen()
       },
     );
   }
@@ -77,6 +80,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     super.initState();
     _selectedAllergenChoices = List<bool>.filled(_allergenchoices.length, false);
     _selectedRestrictionsChoices = List<bool>.filled(restrictionsChoices.length, false);
+    
   }
 
   String getSelectedAllergens() {
@@ -102,29 +106,30 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   void _nextPage() {
-    if (_currentPage < 2) {
+    if (_currentPage < 3) {
       _pageController.animateToPage(
         _currentPage + 1,
         duration: Duration(milliseconds: 300),
         curve: Curves.easeIn,
       );
     } else {
-      // Show final selected choices or perform final action
-      String selectedChoicesString = getSelectedRestrictions();
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            content: Text('Selected Choices: $selectedChoicesString'),
-          );
-        },
-      );
+      String allergens = getSelectedAllergens();
+      String restrictions = getSelectedRestrictions();
+      
+      
+      
+      AlleresProvider().updateRestrictions(restrictions);
+      AlleresProvider().updateAllergens(allergens);
+      
+      Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen(),));
+      
     }
-  }
+  } 
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return
+    Scaffold(
       body: PageView(
         controller: _pageController,
         onPageChanged: (int page) {
@@ -160,13 +165,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 
                TextButton(
                 onPressed: _nextPage,
-                child: Text(_currentPage == 2 ? 'Finish' : 'Next'),    
+                child: Text(_currentPage == 3 ? 'Finish' : 'Next'),    
               ),
             ],
           ),
         ),
       ),
     );
+     
   }
 
   Widget _buildPage1() {

@@ -1,13 +1,9 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:recipe_page_new/Detect_Object_Page.dart';
-import 'package:recipe_page_new/data_repository/dbHelper.dart';
+import 'package:recipe_page_new/providers/alleres_provider.dart';
 import 'package:recipe_page_new/ui/screens/main_recipe_screen.dart';
-
 import 'package:recipe_page_new/ui/screens/new_recipe_screen.dart';
-import 'package:sqflite/sqflite.dart';
+
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -36,6 +32,7 @@ class HomeScreen extends StatelessWidget {
           ElevatedButton(child: Text('Main Recipe Screen'),
           onPressed:  (){
              Navigator.push(context, MaterialPageRoute(builder: (context) => MainRecipeScreen()));
+             
           }),
            
         ],
